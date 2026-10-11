@@ -1,0 +1,75 @@
+% =====================================================================
+%  starter-wtm.tex — copy this to start a "What to memorise" sheet.
+%
+%  The same style in a different shape: every quotation macro works here.
+%  This file only shows what is DIFFERENT about a WTM sheet.
+%
+%  BUILD — from the kit's main folder:   bash tools/build.sh starter-wtm
+%
+%  THE ONE RULE THAT IS NOT TYPOGRAPHIC
+%    Nothing here inserts content you did not type — no honorific, no
+%    grading, no translation. If you want it on the page, type it.
+% =====================================================================
+\documentclass[12pt]{article}
+\newcommand{\ibfontpath}{fonts/}
+\usepackage[wtm]{islamicbooklet}
+
+% Optional — leave out for a plain sheet:
+% \bookletdomain{www.example.org}   % centred in the header
+% \bookletlogo{my-logo.png}         % footer, bottom right
+
+\begin{document}
+
+% \wtmtitle{lesson code}{subject} — "What to memorise:" is fixed.
+\wtmtitle{L1}{The Qualities of A Righteous Wife}
+
+% Everything else sits inside wtmbody, which holds the sheet's 0.5in
+% indent — Arabic paragraphs included.
+\begin{wtmbody}
+
+\wtmbullet{This document contains two (2) points}
+
+% \wtmpoint{name} -> "1. name:"   The colon is added for you; an optional
+% argument becomes a smaller parenthetical: \wtmpoint[optional]{...}
+\wtmpoint{The Āyah}
+
+% Under [wtm] the labels come out as "[meaning:]" and "Sūrah"; a booklet
+% spells them "[meaning]:" and "Surah".
+\ayah{فَالصَّالِحَاتُ قَانِتَاتٌ حَافِظَاتٌ لِلْغَيْبِ بِمَا حَفِظَ اللَّهُ}%
+     {Therefore the righteous women are devoutly obedient \g{to Allâh
+      and to their husbands}, and guard in the husband's absence what
+      Allâh orders them to guard \g{e.g. their chastity, their
+      husband's property}.}%
+     {An-Nisāʾ}{4:34}
+
+\wtmpoint[optional]{The Ḥadīth}
+
+% On a WTM sheet the Arabic ḥadīth is its own paragraph — isnād,
+% quotation and takhrīj in one RTL run, only the quotation green:
+%   \arpara{...}   an RTL paragraph, black by default
+%   \inhadith{...} turns a stretch of it green  (\inathar for an athar,
+%                  \inquran for an āyah quoted inside a narration)
+\arpara{عَنْ أَبِي هُرَيْرَةَ \ra{} قَالَ قَالَ رَسُولُ اللَّهِ \saw{}:
+  \inhadith{«إِذَا صَلَّتِ الْمَرْأَةُ خَمْسَهَا وَصَامَتْ شَهْرَهَا وَحَصَّنَتْ فَرْجَهَا
+  وَأَطَاعَتْ بَعْلَهَا دَخَلَتْ مِنْ أَيِّ أَبْوَابِ الْجَنَّةِ شَاءَتْ»}.
+  رواه ابن حبان في صحيحه (٤١٦٣)، وحسنه الألباني.}
+
+On the authority of Abū Hurayrah \hon{may Allah be pleased with him} who
+said, The Messenger of Allah \saw{} said: \inhadith{“If a woman prays her
+five prayers, fasts her month of Ramaḍān, guards her chastity, and obeys
+her husband, she will enter Paradise from any gate she wishes.”} Narrated
+by Ibn Ḥibbān in his \tr{Ṣaḥīḥ} (4163), declared \tr{ḥasan} by
+Al-Albānī.
+
+\end{wtmbody}
+
+% ---------------------------------------------------------------------
+%  NOTES
+%  More points: add more \wtmpoint{...}. The header and footer repeat on
+%  a second page by themselves. A WTM section inside a booklet: drop the
+%  [wtm] option and call \wtmstyle where it begins (\bookstyle to end).
+%  Transliteration: type ā ī ū ḥ ṣ ṭ ḍ ẓ ʿ ʾ directly; \ayn{} and
+%  \hamzah{} exist for the two half rings. Never an apostrophe for either.
+% ---------------------------------------------------------------------
+
+\end{document}

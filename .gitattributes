@@ -1,0 +1,9 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.sty text eol=lf
+*.tex text eol=lf
+*.ttf binary
+*.otf binary
+*.TTF binary
+*.pdf binary

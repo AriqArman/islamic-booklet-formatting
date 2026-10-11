@@ -1,0 +1,53 @@
+% =====================================================================
+%  starter-faidah.tex — copy this to start a new FĀʾIDAH sheet.
+%
+%  A fāʾidah sheet is the notes from one lesson: no cover, no contents,
+%  a header rule, and a title naming the lesson.
+%
+%  BUILD — from the kit's main folder:   bash tools/build.sh starter-faidah
+%
+%  THE ONE RULE THAT IS NOT TYPOGRAPHIC
+%    Nothing here inserts content you did not type.
+% =====================================================================
+\documentclass[12pt]{article}
+\newcommand{\ibfontpath}{fonts/}
+\usepackage[faidah]{islamicbooklet}
+
+% Optional — leave out for a plain sheet:
+% \bookletdomain{www.example.org}   % header: "Brought to you by: www.example.org"
+% \bookletlogo{my-logo.png}         % footer, bottom right
+
+\begin{document}
+
+% \faidahtitle{lesson code}{subject} — "Fawāʾid from:" is fixed.
+\faidahtitle{L1}{The Subject of the Lesson}
+
+At minute 00:00 of the class, the teacher asked the students about
+something, and the answer was as follows.
+
+\begin{enumerate}
+  \item The first point.
+  \item The second point.
+\end{enumerate}
+
+Taken from the āyah:
+
+\begin{ayah}
+  % \ar{...}  <- UNCOMMENT and type the Arabic here.
+  %    Left commented so this starter builds as shipped: the Arabic
+  %    faces carry no Latin glyphs, so a placeholder like "..." is a
+  %    fatal "there are no glyphs" error, not a missing character.
+  \en{...}
+  \surah{Az-Zukhruf}{43:26-27}
+\end{ayah}
+
+\divider
+
+% A plain Arabic paragraph — black by default, with the quotation itself
+% coloured. One RTL run: isnād black, matn green, takhrīj black.
+% \arpara{ ... \inhadith{«...»} ... }   <- UNCOMMENT and type the Arabic
+
+The English underneath as its own paragraph, with the quotation itself
+in \inhadith{green} and the grading black again.
+
+\end{document}

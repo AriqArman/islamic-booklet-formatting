@@ -1,0 +1,108 @@
+% =====================================================================
+%  starter-book.tex — copy this to start a new BOOK.
+%
+%  A book has a cover, a transliteration chart, a table of contents and
+%  numbered chapters.
+%
+%  BUILD — from the kit's main folder:   bash tools/build.sh starter-book
+%  (LuaLaTeX, three passes: the contents, the cover's page anchors, and
+%  one to settle.)
+%
+%  THE ONE RULE THAT IS NOT TYPOGRAPHIC
+%    Nothing here inserts content you did not type — no honorific, no
+%    grading, no translation, no ḥadīth number. If you want it on the
+%    page, type it.
+% =====================================================================
+\documentclass[12pt]{article}
+\newcommand{\ibfontpath}{fonts/}
+\usepackage[book]{islamicbooklet}
+% \usepackage[book,text=libron]{islamicbooklet}   % Libron instead of EB Garamond
+
+% Optional page furniture — leave out for none:
+% \bookletdomain{www.example.org}    % printed at the foot of the cover
+% \coverband{laurel}                 % lighter, more open frame. Default {vine}.
+
+\begin{document}
+
+% ---------------------------------------------------------------------
+%  THE COVER. Every key is optional — delete the ones you do not need
+%  and the space they occupied closes up. Omit artitle and the whole
+%  Arabic block disappears, which is the English-only cover.
+%
+%  ⚠ A VALUE CONTAINING A COMMA MUST BE BRACED, or keyval reads the
+%    comma as the end of the key:  credit = {Surname, Firstname -- ...},
+%
+%  The frame: put your own full-page artwork in the main folder as
+%  cover-frame.pdf (or .png) and it is used; without one, a frame is
+%  drawn from ornaments.
+% ---------------------------------------------------------------------
+\cover{
+  entitle     = The Book's Title,
+  engloss     = The English Meaning,
+  enauthor    = Authored by ...,
+  enhonorific = ...,
+  endates     = (0000-0000H.),
+  credit      = {..., ... -- ...},
+  edition     = 1\textsuperscript{st} Edition -- Month Year}
+% Arabic cover lines take the keys artitle, arauthor, arhonorific,
+% ardates, areditor — type the Arabic yourself.
+
+% The running head, and the page furniture for everything after it.
+\bookstyle{The Book's Title}
+
+% Front matter.
+\translitchart
+\clearpage   % the chart owns its page
+\contents
+
+\clearpage
+
+% ---------------------------------------------------------------------
+%  THE BODY.
+%
+%  \heading{...} is numbered automatically and takes English only.
+%  Arabic goes in an \ayah, \hadith or \athar block, where it gets the
+%  right face and colour.
+%
+%  For "40th CHAPTER: ..." instead of a bare "40.", put
+%  \headinglabel{CHAPTER} in the preamble.
+% ---------------------------------------------------------------------
+\heading{The First Chapter}
+
+Ordinary prose. Paragraphs are flush left with a small gap between them
+and no first-line indent. Just leave a blank line for a new paragraph.
+
+\begin{ayah}
+  \framing{Allah said:}
+  % \ar{...}  <- UNCOMMENT and type the Arabic here.
+  %    Left commented so this starter builds as shipped: the Arabic
+  %    faces carry no Latin glyphs, so a placeholder like "..." is a
+  %    fatal "there are no glyphs" error, not a missing character.
+  \en{...}
+  \surah{Al-Fātiḥah}{1:5}
+\end{ayah}
+
+\begin{hadith}
+  \framing{The Messenger of Allah \saw{} said:}
+  % \ar{...}  <- UNCOMMENT and type the Arabic here.
+  \en{...}
+  \src{Al-Bukhārī, no. 0000}
+\end{hadith}
+
+\begin{athar}
+  \framing{Ibn ʿAbbās \ra{} said:}
+  \en{...}
+  \src{...}
+\end{athar}
+
+\divider
+
+\heading{The Second Chapter}
+
+Use \tr{transliteration} for Arabic words written in Latin letters,
+\g{a grey round gloss} inside a quotation, \ed{a grey square editorial
+note}, and \hon{may Allah be pleased with him} for an honorific written
+out in words. \link{https://example.com}{A live link} works in a
+footnote too.\footnote{\bareurl{https://example.com}}
+
+\end{document}

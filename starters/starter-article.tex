@@ -1,0 +1,61 @@
+% =====================================================================
+%  starter-article.tex — copy this to start a new ARTICLE or fatwā reply.
+%
+%  An article is a book with the cover and the table of contents switched
+%  off: it opens straight into a running head on page 1, and leans on
+%  footnotes.
+%
+%  BUILD — from the kit's main folder:   bash tools/build.sh starter-article
+%
+%  THE ONE RULE THAT IS NOT TYPOGRAPHIC
+%    Nothing here inserts content you did not type.
+% =====================================================================
+\documentclass[12pt]{article}
+\newcommand{\ibfontpath}{fonts/}
+\usepackage[article]{islamicbooklet}
+
+\begin{document}
+
+\bookstyle{Short title for the running head}
+
+\doctitle{The Full Title of the Article}
+
+Opening prose. There is no cover: page 1 is body text under a running
+head.
+
+% ---------------------------------------------------------------------
+%  A MARGIN LABEL, pointing at the block beside it, and two shaded
+%  blocks — e.g. a question as posed, and the answer given.
+% ---------------------------------------------------------------------
+\sidenote{The question reads:}
+\begin{shaded}{shadequestion}
+The question as posed, on a pale straw ground.
+\end{shaded}
+
+\begin{shaded}{shadeanswer}
+The answer, on a pale green ground.
+\end{shaded}
+
+% ---------------------------------------------------------------------
+%  THE COLOUR KEY. Write it out by hand: it changes per document, and an
+%  automatic version would list colours you never used.
+% ---------------------------------------------------------------------
+\unheadingorheading{How to read this document}
+
+\begin{itemize}
+  \item \inquran{Dark red} is for the āyāt of the Qurʾān and their
+        meanings in English.
+  \item \inhadith{Green} is for the aḥādīth.
+  \item \inathar{Blue} is for a saying of other than the Prophet
+        \saw{} that has been quoted.
+  \item \g{Grey round brackets} clarify the meaning of a word;
+        \ed{grey square brackets} are the editor's note.
+\end{itemize}
+
+\divider
+
+Ordinary prose continues. Footnotes are continuous through the document
+and links inside them are live.\footnote{Taken from
+\link{https://example.com}{this source}.}
+
+\end{document}

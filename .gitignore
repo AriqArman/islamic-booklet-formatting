@@ -1,0 +1,11 @@
+# Your own documents stay on your machine.
+booklets/*
+!booklets/.gitkeep
+
+# LaTeX build leftovers
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+__pycache__/

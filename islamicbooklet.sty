@@ -1,0 +1,879 @@
+% =====================================================================
+%  islamicbooklet.sty — a LuaLaTeX style for Arabic–English Islamic
+%  study material: booklets, articles, lesson notes, memorisation sheets.
+%
+%  \newcommand{\ibfontpath}{fonts/}
+%  \usepackage[book|article|faidah|wtm, text=libron, classic]{islamicbooklet}
+%  \bookletdomain{www.example.org}   \bookletlogo{logo.png}   (optional)
+%
+%  Requires LuaLaTeX. See README.md for the fonts, the options and the
+%  macros; the starters/ folder has one worked file per shape.
+%
+%  GENERATED FILE — produced by a script from its source; edits made here
+%  will be overwritten by the next release.
+%
+%  Copyright (C) 2026 Ariq
+%
+%  This work may be distributed and/or modified under the conditions of
+%  the LaTeX Project Public License, either version 1.3c of this license
+%  or (at your option) any later version. The latest version of this
+%  license is in https://www.latex-project.org/lppl.txt and version 1.3c
+%  or later is part of all distributions of LaTeX version 2008 or later.
+%
+%  This work has the LPPL maintenance status `maintained'.
+%  The Current Maintainer of this work is Ariq.
+%
+%  This work consists of islamicbooklet.sty, the files in starters/ and
+%  the files in tools/. The fonts in fonts/ are NOT part of it: each
+%  keeps its own licence (fonts/LICENSES.md).
+%
+%  Page design based on the books typeset by Suheyl bin Munir Mangá,
+%  used with his permission.
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{islamicbooklet}[2026/10/11 Islamic study booklet style]
+
+\RequirePackage{iftex}
+\RequireLuaTeX
+
+\newif\ifib@wtm
+\newif\ifib@faidah
+\newif\ifib@article
+\DeclareOption{book}{}                  %
+\DeclareOption{wtm}{\ib@wtmtrue}
+\DeclareOption{faidah}{\ib@faidahtrue}
+\DeclareOption{article}{\ib@articletrue}
+\def\ib@text{garamond}
+\def\ib@text@libron{libron}
+\DeclareOption{text=garamond}{\def\ib@text{garamond}}
+\DeclareOption{text=libron}{\def\ib@text{libron}}
+\newif\ifib@classic
+\DeclareOption{classic}{\ib@classictrue}
+\ProcessOptions\relax
+
+\RequirePackage{fontspec}
+\RequirePackage[bidi=basic]{babel}
+\RequirePackage{xcolor}
+\RequirePackage{fancyhdr}
+\RequirePackage{needspace}
+\RequirePackage{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{pgfornament}
+\usetikzlibrary{calc}
+\RequirePackage{keyval}
+\RequirePackage[hidelinks]{hyperref}
+
+\geometry{a4paper, left=1in, right=1in, top=1in, bottom=1in, headsep=0.2in}
+
+\babelprovide[import, main]{english}
+\babelprovide[import, onchar=ids fonts]{arabic}
+
+\providecommand{\ibfontpath}{./fonts/}
+
+\newcommand{\ib@naskhfile}{KFGQPC Uthmanic Taha Naskh}
+\newcommand{\ib@hafsfile}{KFGQPC Uthmanic Script HAFS}
+\newcommand{\ib@symfile}{KFGQPC Arabic Symbols 01}
+\newcommand{\ib@munafile}{Bahij Muna}
+\IfFileExists{\ibfontpath KFGQPCUthmanicTahaNaskh.otf}
+  {\renewcommand{\ib@naskhfile}{KFGQPCUthmanicTahaNaskh}}{}
+\IfFileExists{\ibfontpath KFGQPCUthmanicScriptHAFS.ttf}
+  {\renewcommand{\ib@hafsfile}{KFGQPCUthmanicScriptHAFS}}{}
+\IfFileExists{\ibfontpath KFGQPCArabicSymbols01.otf}
+  {\renewcommand{\ib@symfile}{KFGQPCArabicSymbols01}}{}
+\IfFileExists{\ibfontpath BahijMuna.ttf}
+  {\renewcommand{\ib@munafile}{BahijMuna}}{}
+
+\RequirePackage{newunicodechar}
+\newfontfamily\ib@garamond[Path=\ibfontpath, Extension=.ttf, Ligatures=TeX,
+  UprightFont=EBGaramond-Regular, ItalicFont=EBGaramond-Italic,
+  BoldFont=EBGaramond-Bold]{EBGaramond}
+\ifx\ib@text\ib@text@libron
+  \babelfont{rm}[Path=\ibfontpath, Extension=.ttf,
+    UprightFont=Libron-Regular, ItalicFont=Libron-Italic,
+    BoldFont=Libron-Bold, BoldItalicFont=Libron-BoldItalic]{Libron}
+  \newfontfamily\ib@textface[Path=\ibfontpath, Extension=.ttf, Ligatures=TeX,
+    UprightFont=Libron-Regular, ItalicFont=Libron-Italic,
+    BoldFont=Libron-Bold, BoldItalicFont=Libron-BoldItalic]{Libron}
+  \newunicodechar{ʿ}{{\ib@garamond ʿ}}%
+  \newunicodechar{ʾ}{{\ib@garamond ʾ}}%
+\else
+  \babelfont{rm}[Path=\ibfontpath, Extension=.ttf,
+    UprightFont=EBGaramond-Regular, ItalicFont=EBGaramond-Italic,
+    BoldFont=EBGaramond-Bold]{EBGaramond}
+  \let\ib@textface\ib@garamond
+\fi
+\babelfont[arabic]{rm}[Path=\ibfontpath, Extension=.otf,
+  UprightFont=\ib@naskhfile,
+  ItalicFont=\ib@naskhfile]%
+  {\ib@naskhfile}
+\ifib@classic
+  \IfFileExists{\ibfontpath Baskerville.ttc}{}{%
+    \PackageError{islamicbooklet}{Option `classic' needs fonts/Baskerville.ttc}%
+      {Copy Baskerville.ttc from macOS into fonts/, or remove `classic'.}}%
+  \newfontfamily\headingfont[Path=\ibfontpath, Extension=.ttc,
+    Ligatures=TeX,
+    UprightFont=Baskerville,   UprightFeatures={FontIndex=0},
+    BoldFont=Baskerville,      BoldFeatures={FontIndex=1},
+    ItalicFont=Baskerville,    ItalicFeatures={FontIndex=2},
+    BoldItalicFont=Baskerville,BoldItalicFeatures={FontIndex=3}]{Baskerville}
+  \newfontfamily\translitfont[Path=\ibfontpath, Extension=.ttc,
+    Ligatures=TeX,
+    UprightFont=Baskerville,   UprightFeatures={FontIndex=0},
+    BoldFont=Baskerville,      BoldFeatures={FontIndex=1},
+    ItalicFont=Baskerville,    ItalicFeatures={FontIndex=2},
+    BoldItalicFont=Baskerville,BoldItalicFeatures={FontIndex=3}]{Baskerville}
+\else
+  \let\headingfont\ib@textface
+  \let\translitfont\ib@textface
+\fi
+\IfFileExists{\ibfontpath SnellRoundhand.ttc}{%
+  \directlua{luaotfload.add_fallback("ibayn",
+    {"[\ibfontpath EBGaramond-Regular.ttf]:mode=node;"})}%
+  \newfontfamily\honorificfont[Path=\ibfontpath, Extension=.ttc,
+    Ligatures=TeX, RawFeature={fallback=ibayn},
+    UprightFont=SnellRoundhand, UprightFeatures={FontIndex=0},
+    BoldFont=SnellRoundhand,    BoldFeatures={FontIndex=1}]{SnellRoundhand}}%
+  {\def\honorificfont{\ib@textface\itshape}}
+\newfontfamily\quranfont[Path=\ibfontpath, Extension=.ttf,
+  Script=Arabic]{\ib@hafsfile}
+\newfontfamily\naskhfont[Path=\ibfontpath, Extension=.otf,
+  Script=Arabic]{\ib@naskhfile}
+\newfontfamily\bracketfont[Path=\ibfontpath, Extension=.ttf,
+  Script=Arabic]{Amiri-Regular}
+\IfFileExists{\ibfontpath\ib@munafile.ttf}%
+  {\newfontfamily\poetryfont[Path=\ibfontpath, Extension=.ttf,
+     Script=Arabic]{\ib@munafile}%
+   \def\ib@dividermark{{\poetryfont ❊❊❊}}}%
+  {\let\poetryfont\naskhfont
+   \def\ib@dividermark{{\ib@garamond\fontsize{15pt}{15pt}\selectfont ❦}}}
+\IfFileExists{\ibfontpath majalla.ttf}%
+  {\newfontfamily\poetryenfont[Path=\ibfontpath, Extension=.ttf]{majalla}}%
+  {\let\poetryenfont\ib@textface}
+
+\definecolor{quranred}{HTML}{C00000}     %
+\definecolor{hadithgreen}{HTML}{3A7C22}  %
+\definecolor{atharblue}{HTML}{2E5F7F}    %
+\definecolor{poetrypurple}{HTML}{7030A0} %
+\definecolor{glossgrey}{HTML}{7F7F7F}    %
+
+\definecolor{framegrey}{HTML}{788090}
+
+\newcommand{\ib@arsize}{\fontsize{16pt}{19.2pt}\selectfont}  %
+\newcommand{\ib@ensize}{\fontsize{12pt}{15.6pt}\selectfont}  %
+\newcommand{\ib@symsize}{\fontsize{18pt}{21.6pt}\selectfont} %
+
+\newcommand{\ib@bodysize}{\fontsize{12pt}{15.6pt}\selectfont}
+\newlength{\ib@parskip}
+\setlength{\ib@parskip}{6pt}
+\AtBeginDocument{%
+  \ib@bodysize
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{\ib@parskip}}
+
+\newlength{\ib@blockskip}
+\setlength{\ib@blockskip}{8pt}
+\setlength{\emergencystretch}{1em}
+\setlength{\hfuzz}{0.5pt}
+
+\newcommand{\ib@noparskip}{\setlength{\parskip}{0pt}}
+\newcommand{\ib@blockopen}{\par\addvspace{\ib@blockskip}\ib@noparskip}
+\newcommand{\ib@blockclose}{\par\addvspace{\ib@blockskip}}
+
+\renewcommand{\footnoterule}{\kern-3pt\hrule width 2in\kern 2.6pt}
+\renewcommand{\footnotesize}{\fontsize{10pt}{12pt}\selectfont}
+\newcommand{\footnotestart}[1]{\setcounter{footnote}{\numexpr#1-1\relax}}
+
+\newcommand{\ib@ar}[3]{%
+  \begin{otherlanguage}{arabic}%
+    \skip@ib=\leftskip \leftskip=0pt \rightskip=\skip@ib
+    {#1\color{#2}\ib@arsize #3\par}%
+  \end{otherlanguage}}
+\newskip\skip@ib
+
+\newcommand{\iblabelmeaning}{[meaning]:}
+\newcommand{\iblabelsurah}{Surah}
+
+\RequirePackage{newunicodechar}
+\newcommand{\ib@waqf}[1]{\leavevmode\hbox{\char#1}}
+\newunicodechar{ۖ}{\ib@waqf{"06D6}}
+\newunicodechar{ۗ}{\ib@waqf{"06D7}}
+\newunicodechar{ۘ}{\ib@waqf{"06D8}}
+\newunicodechar{ۙ}{\ib@waqf{"06D9}}
+\newunicodechar{ۚ}{\ib@waqf{"06DA}}
+\newunicodechar{ۛ}{\ib@waqf{"06DB}}
+\newunicodechar{۝}{\ib@waqf{"06DD}}
+\newunicodechar{۞}{\ib@waqf{"06DE}}
+
+\RequirePackage{environ}
+
+\newcommand{\ib@clearparts}{%
+  \global\let\ib@p@framing\@empty
+  \global\let\ib@p@ar\@empty
+  \global\let\ib@p@tl\@empty
+  \global\let\ib@p@en\@empty
+  \global\let\ib@p@src\@empty
+  \global\let\ib@p@surah\@empty}
+
+\newcommand{\ib@set@framing}[1]{\gdef\ib@p@framing{#1}}
+\newcommand{\ib@set@ar}[1]{\gdef\ib@p@ar{#1}}
+\newcommand{\ib@set@tl}[1]{\gdef\ib@p@tl{#1}}
+\newcommand{\ib@set@en}[1]{\gdef\ib@p@en{#1}}
+\newcommand{\ib@set@src}[1]{\gdef\ib@p@src{#1}}
+\newcommand{\ib@set@surah}[2]{\gdef\ib@p@surah{\iblabelsurah{} #1 (#2)}}
+
+\newcommand{\ib@readparts}{%
+  \ib@clearparts
+  \begingroup
+    \let\framing\ib@set@framing
+    \let\ar\ib@set@ar
+    \let\tl\ib@set@tl
+    \let\en\ib@set@en
+    \let\src\ib@set@src
+    \let\surah\ib@set@surah
+    \setbox\z@=\vbox{\BODY}%
+  \endgroup}
+
+\newcommand{\ib@ifpart}[3]{%
+  \ifx#1\@empty #3\else #2\fi}
+
+\newcommand{\ib@typeset@tl}{%
+  \ib@ifpart{\ib@p@tl}{{\translitfont\itshape\ib@p@tl}\par}{}}
+
+\newcommand{\ib@typeset@framing}{%
+  \ib@ifpart{\ib@p@framing}%
+    {\needspace{3\baselineskip}\ib@p@framing\par\nopagebreak[4]}{}}
+
+\newcommand{\ib@srcsep}{\penalty200\ }
+\newcommand{\ib@typeset@src}{%
+  \ib@ifpart{\ib@p@surah}%
+    {\ib@srcsep[\ib@p@surah]}%
+    {\ib@ifpart{\ib@p@src}{\ib@srcsep[\ib@p@src]}{}}}
+
+\newif\ifib@noquotes
+\newcommand{\ib@noquotes@key}{noquotes}
+\newcommand{\ib@setnoquotes}[1]{%
+  \ib@noquotesfalse
+  \def\ib@given{#1}%
+  \ifx\ib@given\ib@noquotes@key\ib@noquotestrue\fi}
+
+\newcommand{\ib@quoted}[3]{\ifib@noquotes #2\else #1#2#3\fi}
+
+\newif\ifib@qpending
+\newcommand{\ib@openmark}{}
+\newcommand{\ib@flushopen}{%
+  \ifib@qpending\ \ib@openmark\global\ib@qpendingfalse\fi
+  \ignorespaces}
+\newcommand{\isnad}[1]{{\color{black}#1}\ib@flushopen}
+
+\newif\ifib@hasisnad
+\newcommand{\ib@scanmark}{}
+\long\def\ib@scan#1\isnad#2#3\ib@scanend{%
+  \ifx\ib@scanmark#2\ib@hasisnadfalse\else\ib@hasisnadtrue\fi}
+\long\def\ib@testisnad#1{\ib@scan#1\isnad\ib@scanmark\ib@scanend}
+
+\newcommand{\ib@quotedpart}[3]{%
+  \ifib@noquotes
+    #2%
+  \else
+    \expandafter\ib@testisnad\expandafter{#2}%
+    \ifib@hasisnad
+      \def\ib@openmark{#1}\global\ib@qpendingtrue #2#3%
+    \else
+      #1#2#3%
+    \fi
+  \fi}
+
+\NewEnviron{ayah}{%
+  \begingroup\ib@blockopen
+  \ib@readparts
+  \ib@typeset@framing
+  \ib@ifpart{\ib@p@ar}%
+    {\ib@ar{\quranfont}{quranred}{%
+       {\bracketfont\ib@arsize ﴿}\ib@p@ar{\bracketfont\ib@arsize ﴾}}}{}%
+  \ib@typeset@tl
+  \ib@ifpart{\ib@p@en}%
+    {{\color{glossgrey}\iblabelmeaning}~%
+     {\color{quranred}%
+       {\bracketfont\ib@ensize ﴾}\ib@p@en{\bracketfont\ib@ensize ﴿}}}{}%
+  \ib@typeset@src\ib@blockclose\endgroup}
+
+\newcommand{\ib@enopen}{{\naskhfont\ib@ensize «}}
+\newcommand{\ib@enclose}{{\naskhfont\ib@ensize »}}
+\NewEnviron{hadith}[1][]{%
+  \begingroup\ib@blockopen
+  \ib@setnoquotes{#1}%
+  \ib@readparts
+  \ib@typeset@framing
+  \ib@ifpart{\ib@p@ar}%
+    {\ib@ar{\naskhfont}{hadithgreen}{\ib@quotedpart{«}{\ib@p@ar}{»}}}{}%
+  \ib@typeset@tl
+  \ib@ifpart{\ib@p@en}%
+    {{\color{hadithgreen}%
+      \ib@quotedpart{\ib@enopen}{\ib@p@en}{\ib@enclose}}}{}%
+  \ib@typeset@src\ib@blockclose\endgroup}
+
+\NewEnviron{athar}[1][]{%
+  \begingroup\ib@blockopen
+  \ib@setnoquotes{#1}%
+  \ib@readparts
+  \ib@typeset@framing
+  \ib@ifpart{\ib@p@ar}%
+    {\ib@ar{\naskhfont}{atharblue}{\ib@quotedpart{«}{\ib@p@ar}{»}}}{}%
+  \ib@typeset@tl
+  \ib@ifpart{\ib@p@en}%
+    {{\color{atharblue}%
+      \ib@quotedpart{\ib@enopen}{\ib@p@en}{\ib@enclose}}}{}%
+  \ib@typeset@src\ib@blockclose\endgroup}
+
+\newcommand{\arpara}[1]{\ib@ar{\naskhfont}{black}{#1}}
+
+\newcommand{\g}[1]{{\color{glossgrey}(#1)}}
+\newcommand{\ed}[1]{{\color{glossgrey}[#1]}}
+
+\newcommand{\ayahsep}{\hspace{0.3em}{\quranfont ۝}\hspace{0.3em}}
+
+\newcommand{\inquran}[1]{{\color{quranred}#1}}      %
+\newcommand{\inhadith}[1]{{\color{hadithgreen}#1}}  %
+\newcommand{\inathar}[1]{{\color{atharblue}#1}}     %
+\newcommand{\inpoetry}[1]{{\color{poetrypurple}#1}} %
+\newcommand{\ingloss}[1]{{\color{glossgrey}#1}}     %
+\newcommand{\inbody}[1]{{\color{black}#1}}          %
+
+\newcommand{\tr}[1]{{\translitfont\itshape #1}}   %
+\newcommand{\hon}[1]{{\honorificfont #1}}         %
+
+\newcommand{\ayn}{ʿ}    %
+\newcommand{\hamzah}{ʾ} %
+\newcommand{\wasl}{ٱ}   %
+
+\newfontfamily\symbolfont[Path=\ibfontpath, Extension=.otf]%
+  {\ib@symfile}
+
+\newcommand{\hglyph}[1]{{\naskhfont\ib@symsize\char#1}}
+\newcommand{\sglyph}[1]{{\symbolfont\ib@symsize\char#1}}
+
+\newcommand{\saww}{\sglyph{"F067}}     %
+\newcommand{\rdhu}{\sglyph{"F068}}     %
+\newcommand{\rdha}{\sglyph{"F069}}     %
+\newcommand{\rdhum}{\sglyph{"F06A}}    %
+\newcommand{\rdhuma}{\sglyph{"F06B}}   %
+\newcommand{\rdhunna}{\sglyph{"F06C}}  %
+\newcommand{\rmhu}{\sglyph{"F072}}     %
+\newcommand{\rmhum}{\sglyph{"F073}}    %
+\newcommand{\rmhuma}{\sglyph{"F074}}   %
+\newcommand{\rmha}{\sglyph{"F075}}     %
+\newcommand{\rmhunna}{\sglyph{"F076}}  %
+\newcommand{\swt}{\sglyph{"F063}}      %
+\newcommand{\azza}{\sglyph{"F062}}     %
+\newcommand{\jj}{\sglyph{"F064}}       %
+\newcommand{\jalwa}{\sglyph{"F065}}    %
+\newcommand{\tabaraka}{\sglyph{"F066}} %
+\newcommand{\akbar}{\sglyph{"F061}}    %
+\newcommand{\asws}{\sglyph{"F06D}}     %
+\newcommand{\as}{\sglyph{"F06E}}       %
+\newcommand{\asha}{\sglyph{"F06F}}     %
+\newcommand{\ashum}{\sglyph{"F070}}    %
+\newcommand{\ashuma}{\sglyph{"F071}}   %
+
+\newcommand{\saw}{\saww}
+\newcommand{\ra}{\rdhu}
+\newcommand{\raha}{\rdha}
+\newcommand{\rahum}{\rdhum}
+\newcommand{\rahuma}{\rdhuma}
+\newcommand{\rh}{\rmhu}
+\newcommand{\rhum}{\rmhum}
+\newcommand{\rhuma}{\rmhuma}
+
+\newcommand{\hfhu}{حفظه الله}          %
+\newcommand{\taal}{تعالى}              %
+
+\newcommand{\ibnt}{Ibn Taymiyyah\,\rmhu}
+\newcommand{\ibntar}{ابن تيمية\,\rmhu}
+\newcommand{\ibaq}{Ibn al-Qayyim\,\rmhu}
+\newcommand{\ibaqar}{ابن القيم\,\rmhu}
+\newcommand{\ibnu}{Ibn ʿUthaymīn\,\rmhu}
+\newcommand{\ibnuar}{ابن عثيمين\,\rmhu}
+
+\newcommand{\pelm}{people of ʿilm}
+\newcommand{\pebd}{people of bidʿah}
+\newcommand{\prp}{prophet\,\saww}
+
+\newcommand{\ib@headindent}{2.2em}
+\newcommand{\ib@headlabel}{}
+\newcommand{\headinglabel}[1]{\renewcommand{\ib@headlabel}{#1}}
+
+\newcommand{\ib@ordinal}[1]{%
+  \number#1\begingroup
+  \count0=#1\relax \count2=\count0 \divide\count2 by 100
+  \multiply\count2 by 100 \advance\count0 by -\count2   %
+  \ifnum\count0>10 \ifnum\count0<14 \textsuperscript{th}\else\ib@ord@ones{#1}\fi
+  \else\ib@ord@ones{#1}\fi\endgroup}
+\newcommand{\ib@ord@ones}[1]{%
+  \count0=#1\relax \count2=\count0 \divide\count2 by 10
+  \multiply\count2 by 10 \advance\count0 by -\count2    %
+  \ifcase\count0 \textsuperscript{th}\or\textsuperscript{st}\or
+    \textsuperscript{nd}\or\textsuperscript{rd}\else\textsuperscript{th}\fi}
+
+\newcommand{\heading}[1]{%
+  \needspace{6\baselineskip}%
+  \refstepcounter{section}%
+  \par\vspace{1.2\baselineskip}%
+  {\headingfont\fontsize{20pt}{24pt}\selectfont
+   \raggedright
+   \noindent\hangindent=\ib@headindent\hangafter=1
+   \ifx\ib@headlabel\@empty
+     \thesection.\hspace{0.6em}%
+   \else
+     \ib@ordinal{\value{section}}\ \ib@headlabel:\hspace{0.4em}%
+   \fi
+   #1}%
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}%
+  \par\vspace{0.3\baselineskip}}
+
+\newcommand{\doctitle}[1]{%
+  {\headingfont\fontsize{22pt}{26pt}\selectfont #1}\par}
+
+\newcommand{\divider}{\par\nopagebreak[4]%
+  \vspace{0.6\baselineskip}\nopagebreak[4]%
+  \centerline{\ib@dividermark}\nopagebreak[4]%
+  \vspace{0.6\baselineskip}\par}
+
+\newcommand{\notestyle}{%
+  \pagestyle{fancy}\fancyhf{}%
+  \renewcommand{\headrulewidth}{0.4pt}}
+
+\newcommand{\bookstyle}[1]{%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[L]{\headingfont\footnotesize #1}%
+  \fancyhead[R]{\headingfont\footnotesize\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}}
+
+\def\ib@domain{}
+\def\ib@logofile{}
+\newcommand{\bookletdomain}[1]{\def\ib@domain{#1}}
+\newcommand{\bookletlogo}[1]{\def\ib@logofile{#1}}
+\newcommand{\ib@logo}[2]{%
+  \ifx\ib@logofile\@empty\else
+    \IfFileExists{\ib@logofile}%
+      {\raisebox{#1}{\includegraphics[width=#2]{\ib@logofile}}}{}%
+  \fi}
+
+\newcommand{\wtmstyle}{%
+  \geometry{headheight=15pt}%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[C]{\headingfont\fontsize{12pt}{14.4pt}\selectfont
+                \ib@domain}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \fancyfoot[R]{\ib@logo{-0.35in}{1.49in}}%
+  \renewcommand{\footrulewidth}{0pt}}
+
+\newcommand{\wtmtitle}[2]{%
+  \par\noindent{\headingfont\fontsize{22pt}{26.4pt}\selectfont\raggedright
+       \itshape What to memorise:\upshape\ #1 \textbar\ #2\par}%
+  \vspace{0.4\baselineskip}}
+
+\newenvironment{wtmbody}%
+  {\par\setlength{\leftskip}{0.5in}\setlength{\parindent}{0pt}}%
+  {\par\setlength{\leftskip}{0pt}}
+
+\newcommand{\wtmbullet}[1]{%
+  \par\noindent\hspace*{-0.25in}\makebox[0.25in][l]{-}#1\par}
+
+\newcounter{wtmpoint}
+\newcommand{\wtmpoint}[2][]{%
+  \par\vspace{0.7\baselineskip}%
+  \needspace{4\baselineskip}%
+  \refstepcounter{wtmpoint}%
+  \noindent\hspace*{-0.25in}%
+  {\fontsize{18pt}{21.6pt}\selectfont
+   \makebox[0.25in][l]{\thewtmpoint.}#2%
+   \if\relax\detokenize{#1}\relax\else
+     {\fontsize{14pt}{16.8pt}\selectfont\ (#1)}%
+   \fi
+   :}%
+  \par\vspace{0.35\baselineskip}}
+
+\ifib@wtm
+  \renewcommand{\iblabelmeaning}{[meaning:]}
+  \renewcommand{\iblabelsurah}{Sūrah}
+  \AtBeginDocument{\wtmstyle}
+\fi
+
+\makeatletter
+
+\newcommand{\ib@frameinset}{18pt}      %
+\newcommand{\ib@framerule}{34.5pt}     %
+\newcommand{\ib@framecorner}{34pt}     %
+\newcommand{\ib@cornerorn}{61}         %
+\newcommand{\ib@sideorn}{71}           %
+\newcommand{\ib@tiletarget}{60pt}      %
+
+\newcommand{\coverband}[1]{%
+  \def\ib@bandname{#1}%
+  \def\ib@band@laurel{laurel}%
+  \ifx\ib@bandname\ib@band@laurel
+    \renewcommand{\ib@sideorn}{87}\renewcommand{\ib@tiletarget}{40pt}%
+  \else
+    \renewcommand{\ib@sideorn}{71}\renewcommand{\ib@tiletarget}{60pt}%
+  \fi}
+\newlength{\ib@bandwd}
+\newlength{\ib@bandht}
+\newlength{\ib@tilewd}
+\newlength{\ib@tileht}
+\newlength{\ib@tx}
+\newlength{\ib@ty}
+
+\newcommand{\ib@framefile}{cover-frame}
+\newcommand{\ib@artframe}[1]{%
+\begin{tikzpicture}[remember picture,overlay]
+  \node[anchor=north west,inner sep=0pt] at (current page.north west)
+    {\includegraphics[width=\paperwidth,height=\paperheight]{#1}};
+\end{tikzpicture}}
+
+\newcommand{\coverframe}{%
+  \IfFileExists{\ib@framefile.pdf}%
+    {\ib@artframe{\ib@framefile.pdf}}%
+    {\IfFileExists{\ib@framefile.png}%
+       {\ib@artframe{\ib@framefile.png}}%
+       {\ib@drawnframe}}}
+
+\newcommand{\ib@drawnframe}{%
+  \setlength{\ib@bandwd}{\paperwidth}%
+  \addtolength{\ib@bandwd}{-2\ib@frameinset}%
+  \addtolength{\ib@bandwd}{-2\ib@framecorner}%
+  \setlength{\ib@bandht}{\paperheight}%
+  \addtolength{\ib@bandht}{-2\ib@frameinset}%
+  \addtolength{\ib@bandht}{-2\ib@framecorner}%
+\begin{tikzpicture}[remember picture,overlay,color=framegrey]
+  \coordinate (ib@tl) at ($(current page.north west)+( \ib@frameinset,-\ib@frameinset)$);
+  \coordinate (ib@tr) at ($(current page.north east)+(-\ib@frameinset,-\ib@frameinset)$);
+  \coordinate (ib@bl) at ($(current page.south west)+( \ib@frameinset, \ib@frameinset)$);
+  \coordinate (ib@br) at ($(current page.south east)+(-\ib@frameinset, \ib@frameinset)$);
+  \draw[line width=0.5pt]
+    ($(current page.north west)+( \ib@framerule,-\ib@framerule)$) rectangle
+    ($(current page.south east)+(-\ib@framerule, \ib@framerule)$);
+  \pgfmathtruncatemacro{\ib@nh}{max(1,round(\ib@bandwd/\ib@tiletarget))}%
+  \pgfmathsetlength{\ib@tilewd}{\ib@bandwd/\ib@nh}%
+  \pgfmathtruncatemacro{\ib@nv}{max(1,round(\ib@bandht/\ib@tiletarget))}%
+  \pgfmathsetlength{\ib@tileht}{\ib@bandht/\ib@nv}%
+  \foreach \k in {1,...,\ib@nh}{%
+    \node[anchor=north] at
+      ([xshift=\dimexpr\ib@frameinset+\ib@framecorner
+               +\k\ib@tilewd-0.5\ib@tilewd\relax,
+        yshift=-\ib@frameinset]current page.north west)
+      {\pgfornament[width=\the\ib@tilewd]{\ib@sideorn}};
+    \node[anchor=south] at
+      ([xshift=\dimexpr\ib@frameinset+\ib@framecorner
+               +\k\ib@tilewd-0.5\ib@tilewd\relax,
+        yshift=\ib@frameinset]current page.south west)
+      {\pgfornament[width=\the\ib@tilewd,symmetry=h]{\ib@sideorn}};}
+  \foreach \k in {1,...,\ib@nv}{%
+    \node[rotate=90,anchor=north] at
+      ([xshift=\ib@frameinset,
+        yshift=-\dimexpr\ib@frameinset+\ib@framecorner
+               +\k\ib@tileht-0.5\ib@tileht\relax]current page.north west)
+      {\pgfornament[width=\the\ib@tileht]{\ib@sideorn}};
+    \node[rotate=-90,anchor=north] at
+      ([xshift=-\ib@frameinset,
+        yshift=-\dimexpr\ib@frameinset+\ib@framecorner
+               +\k\ib@tileht-0.5\ib@tileht\relax]current page.north east)
+      {\pgfornament[width=\the\ib@tileht]{\ib@sideorn}};}
+  \node[anchor=north west] at (ib@tl)
+    {\pgfornament[width=\ib@framecorner]{\ib@cornerorn}};
+  \node[anchor=north east] at (ib@tr)
+    {\pgfornament[width=\ib@framecorner,symmetry=v]{\ib@cornerorn}};
+  \node[anchor=south west] at (ib@bl)
+    {\pgfornament[width=\ib@framecorner,symmetry=h]{\ib@cornerorn}};
+  \node[anchor=south east] at (ib@br)
+    {\pgfornament[width=\ib@framecorner,symmetry=c]{\ib@cornerorn}};
+\end{tikzpicture}}
+
+\def\ib@ck@artitle{}      \def\ib@ck@arsubtitle{}
+\def\ib@ck@arauthor{}     \def\ib@ck@arhonorific{}
+\def\ib@ck@ardates{}      \def\ib@ck@areditor{}
+\def\ib@ck@areditorhon{}
+\def\ib@ck@entitle{}      \def\ib@ck@engloss{}
+\def\ib@ck@ensubtitle{}   \def\ib@ck@enauthor{}
+\def\ib@ck@enhonorific{}  \def\ib@ck@endates{}
+\def\ib@ck@eneditor{}     \def\ib@ck@eneditorhon{}
+\def\ib@ck@credit{}       \def\ib@ck@edition{}
+\def\ib@ck@creditlabel{Rendered into English and edited by}
+
+\define@key{ibcover}{artitle}{\def\ib@ck@artitle{#1}}
+\define@key{ibcover}{arsubtitle}{\def\ib@ck@arsubtitle{#1}}
+\define@key{ibcover}{arauthor}{\def\ib@ck@arauthor{#1}}
+\define@key{ibcover}{arhonorific}{\def\ib@ck@arhonorific{#1}}
+\define@key{ibcover}{ardates}{\def\ib@ck@ardates{#1}}
+\define@key{ibcover}{areditor}{\def\ib@ck@areditor{#1}}
+\define@key{ibcover}{areditorhonorific}{\def\ib@ck@areditorhon{#1}}
+\define@key{ibcover}{entitle}{\def\ib@ck@entitle{#1}}
+\define@key{ibcover}{engloss}{\def\ib@ck@engloss{#1}}
+\define@key{ibcover}{ensubtitle}{\def\ib@ck@ensubtitle{#1}}
+\define@key{ibcover}{enauthor}{\def\ib@ck@enauthor{#1}}
+\define@key{ibcover}{enhonorific}{\def\ib@ck@enhonorific{#1}}
+\define@key{ibcover}{endates}{\def\ib@ck@endates{#1}}
+\define@key{ibcover}{eneditor}{\def\ib@ck@eneditor{#1}}
+\define@key{ibcover}{eneditorhonorific}{\def\ib@ck@eneditorhon{#1}}
+\define@key{ibcover}{creditlabel}{\def\ib@ck@creditlabel{#1}}
+\define@key{ibcover}{credit}{\def\ib@ck@credit{#1}}
+\define@key{ibcover}{edition}{\def\ib@ck@edition{#1}}
+
+\newcommand{\ib@cline}[3]{%
+  \ifx#2\@empty\else\par{#1 #2\par}\vspace{#3}\fi}
+
+\newcommand{\ib@coverfoot}{%
+  \ifx\ib@domain\@empty\else
+    {\rmfamily\fontsize{10pt}{12pt}\selectfont \ib@domain\par}\fi}
+
+\newcommand{\ib@coverreset}{%
+  \def\ib@ck@artitle{}      \def\ib@ck@arsubtitle{}%
+  \def\ib@ck@arauthor{}     \def\ib@ck@arhonorific{}%
+  \def\ib@ck@ardates{}      \def\ib@ck@areditor{}%
+  \def\ib@ck@areditorhon{}%
+  \def\ib@ck@entitle{}      \def\ib@ck@engloss{}%
+  \def\ib@ck@ensubtitle{}   \def\ib@ck@enauthor{}%
+  \def\ib@ck@enhonorific{}  \def\ib@ck@endates{}%
+  \def\ib@ck@eneditor{}     \def\ib@ck@eneditorhon{}%
+  \def\ib@ck@credit{}       \def\ib@ck@edition{}%
+  \def\ib@ck@creditlabel{Rendered into English and edited by}}
+
+\newcommand{\cover}[1]{%
+  \ib@coverreset
+  \setkeys{ibcover}{#1}%
+  \begin{titlepage}%
+  \coverframe
+  \centering
+  \vspace*{-14pt}
+  \ib@cline{\naskhfont\fontsize{26pt}{34pt}\selectfont}{\ib@ck@artitle}{16pt}
+  \ib@cline{\naskhfont\fontsize{18pt}{24pt}\selectfont}{\ib@ck@arsubtitle}{12pt}
+  \ib@cline{\naskhfont\fontsize{18pt}{24pt}\selectfont}{\ib@ck@arauthor}{10pt}
+  \ib@cline{\naskhfont\fontsize{14pt}{18pt}\selectfont}{\ib@ck@arhonorific}{10pt}
+  \ib@cline{\naskhfont\fontsize{14pt}{18pt}\selectfont}{\ib@ck@ardates}{20pt}
+  \ib@cline{\naskhfont\fontsize{16pt}{21pt}\selectfont}{\ib@ck@areditor}{8pt}
+  \ib@cline{\naskhfont\fontsize{14pt}{18pt}\selectfont}{\ib@ck@areditorhon}{36pt}
+  \ifx\ib@ck@entitle\@empty\else
+    \par%
+    {\headingfont\itshape\fontsize{24pt}{29pt}\selectfont
+     “\ib@ck@entitle”%
+     \ifx\ib@ck@engloss\@empty\else
+       {\upshape\fontsize{10pt}{12pt}\selectfont\,[\ib@ck@engloss]}%
+     \fi\par}\vspace{12pt}
+  \fi
+  \ib@cline{\rmfamily\itshape\fontsize{14pt}{18pt}\selectfont}{\ib@ck@ensubtitle}{10pt}
+  \ib@cline{\rmfamily\fontsize{12pt}{15.6pt}\selectfont}{\ib@ck@enauthor}{6pt}
+  \ib@cline{\rmfamily\fontsize{12pt}{15.6pt}\selectfont}{\ib@ck@enhonorific}{6pt}
+  \ib@cline{\rmfamily\fontsize{12pt}{15.6pt}\selectfont}{\ib@ck@endates}{24pt}
+  \ib@cline{\rmfamily\fontsize{12pt}{15.6pt}\selectfont}{\ib@ck@eneditor}{6pt}
+  \ib@cline{\rmfamily\fontsize{12pt}{15.6pt}\selectfont}{\ib@ck@eneditorhon}{0pt}
+  \vfill
+  \ifx\ib@ck@credit\@empty\else
+    {\rmfamily\fontsize{10pt}{12pt}\selectfont\ib@ck@creditlabel\par}\vspace{6pt}%
+    {\rmfamily\itshape\fontsize{11pt}{14pt}\selectfont\ib@ck@credit\par}\vspace{14pt}%
+  \fi
+  \ib@cline{\rmfamily\fontsize{10pt}{12pt}\selectfont}{\ib@ck@edition}{18pt}
+  \ib@coverfoot
+  \vspace*{28pt}
+  \end{titlepage}%
+  \setcounter{page}{2}}
+
+\makeatother
+
+\makeatletter
+
+\newcommand{\faidahstyle}{%
+  \geometry{headheight=15pt, top=0.8in, bottom=0.78in, footskip=0.28in}%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[C]{\headingfont\fontsize{10pt}{12pt}\selectfont
+                \ifx\ib@domain\@empty\else Brought to you by: \ib@domain\fi}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \fancyfoot[R]{\ib@logo{-0.30in}{1in}}%
+  \renewcommand{\footrulewidth}{0pt}}
+
+\newcommand{\faidahtitle}[2]{%
+  \par\noindent{\headingfont\fontsize{20pt}{24pt}\selectfont\raggedright
+       \itshape Fawāʾid from:\upshape\ #1 \textbar\ #2\par}%
+  \vspace{0.6\baselineskip}}
+
+\setlength{\marginparwidth}{0.8in}
+\setlength{\marginparsep}{0.12in}
+\reversemarginpar
+\newcommand{\sidenote}[1]{%
+  \marginpar{\raggedleft\footnotesize #1}}
+
+\definecolor{shadequestion}{HTML}{FFF7D6}   %
+\definecolor{shadeanswer}{HTML}{EAF3E4}     %
+\definecolor{shadeneutral}{HTML}{F0F0F0}
+
+\newsavebox{\ib@shadebox}
+\newenvironment{shaded}[1]
+  {\def\ib@shadecolour{#1}%
+   \par\addvspace{\ib@blockskip}%
+   \begin{lrbox}{\ib@shadebox}%
+   \begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}%
+   \ib@noparskip}
+  {\end{minipage}\end{lrbox}%
+   \noindent\colorbox{\ib@shadecolour}{\usebox{\ib@shadebox}}%
+   \par\addvspace{\ib@blockskip}}
+
+\newcommand{\tint}[2]{\colorbox{#1}{#2}}
+
+\newcommand{\ib@tcrow}[2]{%
+  \makebox[1.5cm][c]{\naskhfont\fontsize{14pt}{17pt}\selectfont #2} &
+  \makebox[1.5cm][c]{{\translitfont\upshape #1}}\\\hline}
+\newcommand{\ib@tcbar}[2]{%
+  \noindent\begin{tabular}{|p{#1}|}\hline
+  \centering\rule{0pt}{2.6ex}#2\rule[-1ex]{0pt}{0pt}\tabularnewline\hline
+  \end{tabular}}
+
+\newcommand{\translitchart}{%
+  \unheadingorheading{Transliteration Chart}%
+  \par\vspace{0.5\baselineskip}%
+  {\ib@noparskip\centering
+   \setlength{\tabcolsep}{2pt}%
+   \renewcommand{\arraystretch}{1.25}%
+   \ib@tcbar{0.86\linewidth}{Consonants\footnotemark}\par
+   \vspace{0.9\baselineskip}
+   \begin{minipage}[t]{0.48\linewidth}\centering
+     \begin{tabular}{|c|c|}\hline
+     \ib@tcrow{ʾ}{ء}  \ib@tcrow{b}{ب}  \ib@tcrow{t}{ت}
+     \ib@tcrow{th}{ث} \ib@tcrow{j}{ج}  \ib@tcrow{ḥ}{ح}
+     \ib@tcrow{kh}{خ} \ib@tcrow{d}{د}  \ib@tcrow{dh}{ذ}
+     \ib@tcrow{r}{ر}  \ib@tcrow{z}{ز}  \ib@tcrow{s}{س}
+     \ib@tcrow{sh}{ش}
+     \end{tabular}
+   \end{minipage}\hfill
+   \begin{minipage}[t]{0.48\linewidth}\centering
+     \begin{tabular}{|c|c|}\hline
+     \ib@tcrow{ṣ}{ص}  \ib@tcrow{ḍ}{ض}  \ib@tcrow{ṭ}{ط}
+     \ib@tcrow{ẓ}{ظ}  \ib@tcrow{ʿ}{ع}  \ib@tcrow{gh}{غ}
+     \ib@tcrow{f}{ف}  \ib@tcrow{q}{ق}  \ib@tcrow{k}{ك}
+     \ib@tcrow{L}{ل}  \ib@tcrow{m}{م}  \ib@tcrow{n}{ن}
+     \ib@tcrow{w}{و}  \ib@tcrow{y}{ي}
+     \end{tabular}
+   \end{minipage}\par
+   \vspace{1.2\baselineskip}
+   \begin{minipage}[t]{0.48\linewidth}\centering
+     \ib@tcbar{0.86\linewidth}{Long vowels}\par\nointerlineskip
+     \begin{tabular}{|c|c|}\hline
+     \ib@tcrow{ā}{ا}  \ib@tcrow{ū}{و}  \ib@tcrow{ī}{ي}
+     \end{tabular}
+   \end{minipage}\hfill
+   \begin{minipage}[t]{0.48\linewidth}\centering
+     \ib@tcbar{0.86\linewidth}{short vowels}\par\nointerlineskip
+     \begin{tabular}{|c|c|}\hline
+     \ib@tcrow{a}{ـَ}  \ib@tcrow{u}{ـُ}  \ib@tcrow{i}{ـِ}
+     \end{tabular}
+   \end{minipage}\par
+   \vspace{1.2\baselineskip}
+   \begin{tabular}{|c|}\hline
+   \multicolumn{1}{|c|}{\rule{0pt}{2.4ex}Symbol\rule[-1ex]{0pt}{0pt}}\\\hline
+   \end{tabular}\par\nointerlineskip
+   \begin{tabular}{|c|p{5.2cm}|}\hline
+   \makebox[1.5cm][c]{\naskhfont\fontsize{14pt}{17pt}\selectfont ـّ} &
+   \centering Duplicated letter (for the single letter), and underlined
+   (if represented by two letters)\tabularnewline\hline
+   \end{tabular}\par}%
+  \footnotetext{If a word contains \underline{\textbf{two}} individual
+    letters which could be mistaken for \underline{\textbf{one}}, then the
+    second will be capitalized, example: \tr{IsHām} — which could be
+    mistaken for another word, so in order to avoid this it will be typed
+    as: \tr{IsHām}.}%
+  \vspace{0.6\baselineskip}}
+
+\newcommand{\unheadingorheading}[1]{%
+  \@ifundefined{unheading}%
+    {\par\vspace{1.2\baselineskip}%
+     {\headingfont\fontsize{16pt}{20pt}\selectfont\raggedright\noindent #1}%
+     \par\vspace{0.3\baselineskip}}%
+    {\unheading{#1}}}
+
+\definecolor{linkblue}{HTML}{2E5F7F}
+\newcommand{\link}[2]{\href{#1}{\color{linkblue}#2}}
+\newcommand{\bareurl}[1]{\href{#1}{\color{linkblue}\nolinkurl{#1}}}
+
+\newcommand{\contents}{%
+  \begingroup
+  \ib@noparskip
+  \renewcommand{\contentsname}{\normalfont\headingfont
+    \fontsize{20pt}{24pt}\selectfont Table of Contents}%
+  \setcounter{tocdepth}{1}%
+  \renewcommand{\l@section}[2]{%
+    \begingroup\headingfont\fontsize{12pt}{15.6pt}\selectfont
+    \@dottedtocline{1}{0pt}{1.8em}{##1}{##2}\endgroup}%
+  \tableofcontents
+  \endgroup
+  \par\addvspace{\ib@blockskip}}
+
+\ifib@faidah
+  \AtBeginDocument{\faidahstyle}
+\fi
+\ifib@article
+  \AtBeginDocument{\notestyle}
+\fi
+
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{lettrine}
+
+\newcommand{\ib@qboxlabel}[2]{%
+  \if\relax\detokenize{#2}\relax\else
+    {\noindent\headingfont\scriptsize\addfontfeature{LetterSpace=18}%
+     \color{#1}\MakeUppercase{#2}\par}\vspace{0.2\baselineskip}%
+  \fi}
+\newtcolorbox{quotebox}[2][]{enhanced, breakable,
+  colback=#2!5!white, colframe=#2, boxrule=0pt, leftrule=2.5pt,
+  sharp corners=west, rounded corners=east, arc=3pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  before skip=0.9\baselineskip, after skip=0.9\baselineskip,
+  fontupper=\normalsize,
+  before upper={\ib@qboxlabel{#2}{#1}%
+    \setlength{\parskip}{0.45\baselineskip}}}
+\newenvironment{hadithbox}[1][Ḥadīth]%
+  {\begin{quotebox}[#1]{hadithgreen}}{\end{quotebox}}
+\newenvironment{atharbox}[1][Athar]%
+  {\begin{quotebox}[#1]{atharblue}}{\end{quotebox}}
+
+\newtcolorbox{ayahbox}{enhanced, breakable, colback=white,
+  colframe=quranred, boxrule=0pt, leftrule=0.6pt, sharp corners,
+  left=12pt, right=0pt, top=2pt, bottom=2pt,
+  before skip=0.9\baselineskip, after skip=0.9\baselineskip}
+
+\newcommand{\inayahar}[2]{{\color{quranred}%
+  {\bracketfont\ib@arsize ﴿}{\quranfont\ib@arsize #1}%
+  {\bracketfont\ib@arsize ﴾}}\ {\color{black}[#2]}}
+\newcommand{\inayahen}[2]{{\color{glossgrey}\iblabelmeaning}~%
+  {\color{quranred}{\bracketfont\ib@ensize ﴾}#1%
+  {\bracketfont\ib@ensize ﴿}}\ {\color{glossgrey}[\iblabelsurah\ #2]}}
+
+\newcommand{\spoke}[2][atharblue]{{\color{#1}“#2”}}
+\newcommand{\plainspoke}[1]{“#1”}
+\newenvironment{arabicturns}
+  {\par\begingroup\setlength{\parskip}{0.12\baselineskip}}
+  {\par\endgroup\vspace{0.55\baselineskip}}
+
+\newcommand{\keepwithnext}{\needspace{7\baselineskip}}
+
+\newcommand{\splitheading}[2]{%
+  \needspace{6\baselineskip}\par\vspace{1.2\baselineskip}%
+  {\noindent\headingfont\fontsize{10pt}{12pt}\selectfont
+   \addfontfeature{LetterSpace=18}\MakeUppercase{#1}\par}%
+  \vspace{0.25\baselineskip}%
+  {\noindent\headingfont\fontsize{18pt}{22pt}\selectfont\raggedright #2\par}%
+  \vspace{0.4\baselineskip}}
+
+\newcommand{\runningtitle}[1]{%
+  \pagestyle{fancy}%
+  \fancyhead[C]{}%
+  \fancyhead[L]{\headingfont\fontsize{8pt}{10pt}\selectfont
+    \addfontfeature{LetterSpace=10}\MakeUppercase{#1}}%
+  \fancyhead[R]{\headingfont\fontsize{10pt}{12pt}\selectfont\thepage}}
+
+\renewcommand{\LettrineFontHook}{\headingfont}
+\newcommand{\dropcap}[2]{\lettrine[lines=2, findent=2pt, nindent=0pt]{#1}{#2}}
+
+\newcommand{\notcaptured}{{\color{glossgrey}\itshape [not captured]}}
+
+\makeatother
+
+\endinput
+
