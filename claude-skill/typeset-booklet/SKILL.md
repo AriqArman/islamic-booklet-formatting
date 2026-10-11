@@ -88,7 +88,7 @@ list will agree with each other and both be wrong. This is why the user
 checks every citation themselves, and why the list carries links only.
 
 **3. Move the content in.** The starters show the main macros and
-`README.md` lists the rest, including the layout extras (`hadithbox`,
+`docs/reference.md` lists the rest, including the layout extras (`hadithbox`,
 `atharbox`, `ayahbox`, `\inayahar`/`\inayahen` for an āyah inside a
 narration, `\spoke` for dialogue, `\splitheading`, `\runningtitle`,
 `\dropcap`, `\keepwithnext`). Quotations go in `ayah` / `hadith` /
