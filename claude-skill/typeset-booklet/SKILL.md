@@ -66,7 +66,7 @@ each āyah, ḥadīth and athar in a real source.
 |---|---|
 | Qurʾān | quran.com (the Qurʾān MCP gives the Uthmani text and Hilali-Khan) |
 | ḥadīth | sunnah.com for the text, **dorar.net for the grading** |
-| athar — a Companion, a Tābiʿī, any of the Salaf | shamela.ws (the Shamela MCP), then dorar.net |
+| athar — a Companion, a Tābiʿī, any of the Salaf | the Shamela MCP (or shamela.ws), then dorar.net; the Turath MCP as a second library |
 
 **Read the source before you read their note for what it says.**
 Searching *for* their wording finds something close enough and confirms
