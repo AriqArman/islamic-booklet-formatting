@@ -111,6 +111,93 @@ content you did not type — no honorific, no grading, no translation, no
 ḥadīth number. Check every āyah and ḥadīth against its source before it
 goes on the page.
 
+## How a booklet is made — the full process
+
+The style can be used by hand. In practice the booklets it was built for
+are made with **Claude Code** doing the typesetting and the source
+checking, and a person approving every citation. This is that process.
+
+### In short
+
+*lesson notes → agree the format on a sample page → every āyah, ḥadīth
+and athar verified at its source → typeset → machine-checked → every page
+looked at → a person signs off each citation.*
+
+### The steps
+
+1. **The notes come in** — what the teacher said, in the note-taker's
+   words: short lines, half sentences, references jotted quickly
+   ("An'am 153", "Sahih by Albani").
+2. **Agree the format first.** Before anything is typeset, settle the
+   questions that decide the look: the shape, footnotes, whether the
+   note-taker's own renderings of āyāt are kept or replaced by the
+   published translation, how gaps are shown, how dialogue is set. Then
+   typeset **one sample page** of the real content and adjust it until it
+   is right. (Claude asks these as numbered questions with a recommended
+   answer each — the `grilling` skill below works well for this.)
+3. **Every reference is checked against the original**, not against the
+   notes:
+   - **Qurʾān** — quran.com: the Uthmani Arabic and the translation.
+   - **Ḥadīth** — sunnah.com for the text; **dorar.net** for the
+     scholars' gradings.
+   - **Athar** (sayings of the Companions and the Salaf) — al-Maktabah
+     ash-Shāmilah (shamela.ws), then dorar.net.
+
+   The source **agrees** → its Arabic and reference go in. It
+   **disagrees** (a saying credited to the wrong person, a wrong āyah
+   number) → nothing is quietly corrected: the notes stay as written and
+   the problem is flagged. **Not found** → flagged too; a near match is
+   never substituted.
+4. **The speaker's words are not rewritten.** Only spelling slips are
+   fixed, each one recorded. Where something was not caught, the page
+   says *[not captured]* rather than guessing.
+5. **Typeset** with this style, from a starter.
+6. **Checked twice.** The build must report 0 errors, 0 missing
+   characters and 0 collapsed vowel marks; then every page is looked at
+   for bad breaks, crowded quotations and stranded lines.
+7. **A person has the final say.** With the PDF comes a short list of
+   everything that needs a decision, and a numbered list of links — one
+   per citation — written to `sources.md` beside the booklet. The editor
+   clicks through each one. Nothing is published on an automated check
+   alone.
+
+### Prerequisites for the Claude workflow
+
+| what | why | how |
+|---|---|---|
+| **Claude Code** (terminal, desktop app or IDE extension) | does the typesetting, building and checking | [claude.com/claude-code](https://claude.com/claude-code) |
+| **Qurʾān MCP** | the exact Uthmani text and translations from quran.com — never from memory | the remote server `https://mcp.quran.ai` ([quran/quran-mcp](https://github.com/quran/quran-mcp)) |
+| **Ḥadīth MCP** | ḥadīth text by collection and number | e.g. [hadith-mcp](https://github.com/ovehbe/hadith-mcp) (sunnah.com data) |
+| **Shamela MCP** | the classical books, for āthār and their sources | Shamela's own MCP service ([shamela.ws](https://shamela.ws)), or a connector to a local Shamela library |
+| **Web access** | sunnah.com and **dorar.net** for gradings | Claude's built-in browser or web fetch |
+| **The `typeset-booklet` skill** | the rules and steps above, so Claude follows them every time | in this folder: `claude-skill/typeset-booklet/` |
+| *(optional)* the `grilling` skill | the numbered format questions in step 2 | from the [Matt Pocock skills](https://github.com/mattpocock/skills) plugin |
+
+**Adding an MCP server.** In claude.ai: *Settings → Connectors → Add
+custom connector*, and give it the server's URL — connectors added there
+are available in Claude Code too. Or in Claude Code directly:
+
+```bash
+claude mcp add --transport http quran https://mcp.quran.ai
+```
+
+**Installing the skill.** Copy the folder into your Claude skills folder:
+
+```bash
+cp -r claude-skill/typeset-booklet ~/.claude/skills/
+```
+
+### How you go about it
+
+1. Open Claude Code in this folder (`cd islamic-booklet`, then `claude`).
+2. Hand over your notes — paste them, or give the path to a PDF or
+   document — and say *"typeset this"* (or `/typeset-booklet`).
+3. Answer the format questions; react to the sample page.
+4. When the full booklet comes back, read **"Needs you"** first and answer
+   each question; then click through every link in `sources.md`.
+5. Tell Claude what is wrong; it edits and rebuilds. Repeat until every
+   citation is confirmed — that second pass is yours.
+
 ## Fonts
 
 `fonts/` already holds everything the style needs to build:
@@ -149,6 +236,7 @@ booklets/            your own documents go here
 tools/build.sh       build + check
 tools/fixmarks.py    boxes Arabic words that would otherwise break vowel stacking
 tools/checkmarks.py  finds vowels that collapsed onto their shadda, in the PDF
+claude-skill/        the typeset-booklet skill for Claude Code
 ```
 
 ## Licence
