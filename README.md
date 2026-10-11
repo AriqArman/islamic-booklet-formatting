@@ -163,32 +163,19 @@ looked at → a person signs off each citation.*
 
 ### Prerequisites for the Claude workflow
 
-| what | why | how |
+Follow each project's own setup page — they stay current when an
+address or a step changes.
+
+| what | why | setup |
 |---|---|---|
-| **Claude Code** (terminal, desktop app or IDE extension) | does the typesetting, building and checking | [claude.com/claude-code](https://claude.com/claude-code) |
-| **Qurʾān MCP** | the exact Uthmani text and translations from quran.com — never from memory | the remote server `https://mcp.quran.ai` ([quran/quran-mcp](https://github.com/quran/quran-mcp)) |
-| **Ḥadīth MCP** | ḥadīth text by collection and number, from sunnah.com data | `https://hadith-mcp.org` — [hadith-mcp.org](https://hadith-mcp.org) ([source](https://github.com/ovehbe/hadith-mcp)) |
-| **Shamela MCP** | the classical books, for āthār and their sources, cited by volume and page | `https://shamela.link/mcp` — [Shamela Link](https://shamela.link/en), an independent free service (not shamela.ws); sign in once when adding it |
-| *(optional)* **Turath MCP** | a second classical library — turath.io's books, pages and search | no hosted address: runs on your own computer with `npx -y turath-mcp` ([turath-mcp](https://github.com/adelpro/turath-mcp), a community project; needs Node.js 22+) |
+| **Claude Code** | does the typesetting, building and checking | [claude.com/claude-code](https://claude.com/claude-code) |
+| **Qurʾān MCP** | the exact Uthmani text and translations from quran.com — never from memory | [quran-mcp](https://github.com/quran/quran-mcp) |
+| **Ḥadīth MCP** | ḥadīth text by collection and number, from sunnah.com data | [hadith-mcp.org](https://hadith-mcp.org) |
+| **Shamela MCP** | the classical books, for āthār and their sources | [Shamela Link](https://shamela.link/en) — independent, not shamela.ws |
+| *(optional)* **Turath MCP** | a second classical library (turath.io) | [turath-mcp](https://github.com/adelpro/turath-mcp) — community project, runs on your own computer |
 | **Web access** | sunnah.com and **dorar.net** for gradings | Claude's built-in browser or web fetch |
 | **The `typeset-booklet` skill** | the rules and steps above, so Claude follows them every time | in this folder: `claude-skill/typeset-booklet/` |
-| *(optional)* the `grilling` skill | the numbered format questions in step 2 | from the [Matt Pocock skills](https://github.com/mattpocock/skills) plugin |
-
-**Adding an MCP server.** In claude.ai: *Settings → Connectors → Add
-custom connector*, and give it the server's address — `https://mcp.quran.ai`,
-`https://hadith-mcp.org`, `https://shamela.link/mcp`. Connectors added
-there are available in Claude Code too. Or in Claude Code directly:
-
-```bash
-claude mcp add --transport http quran https://mcp.quran.ai
-claude mcp add --transport http hadith https://hadith-mcp.org
-claude mcp add --transport http shamela https://shamela.link/mcp
-claude mcp add turath -- npx -y turath-mcp
-```
-
-The Shamela server asks you to sign in the first time; Claude Code opens
-that page for you (or run `/mcp` and choose it). Turath runs locally, so
-it is available only in Claude Code or Claude Desktop, not on claude.ai.
+| *(optional)* the `grilling` skill | the numbered format questions in step 2 | [Matt Pocock's skills](https://github.com/mattpocock/skills) |
 
 **Installing the skill.** Copy the folder into your Claude skills folder:
 
