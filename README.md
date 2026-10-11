@@ -5,6 +5,18 @@ the Qurʾān, ḥadīth and the sayings of the Salaf set properly: Uthmani
 script for the Qurʾān, colour-coded quotations, honorific glyphs, and
 Arabic and English sitting together on the same line without any markup.
 
+## Examples
+
+Pages from finished booklets typeset with this style (set with the
+`classic` option; the Question/Answer and word-gloss bars on the second
+page are defined in that booklet, not in the style).
+
+| | |
+|---|---|
+| ![An āyah and a ḥadīth with their meanings](examples/muadh-hadith-and-ayah.png) | ![Ḥadīth, a word gloss, Question and Answer](examples/muadh-question-answer.png) |
+| ![The opening page of a fāʾidah sheet](examples/virtues-of-dawah-p1.png) | ![Āyāt and aḥādīth with footnoted references](examples/virtues-of-dawah-p2.png) |
+| ![Numbered points with Arabic narrations and āthār](examples/conditions-of-dawah-p3.png) | |
+
 ## What you need
 
 1. **LuaLaTeX.** Install one of:
