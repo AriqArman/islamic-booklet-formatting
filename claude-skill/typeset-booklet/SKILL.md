@@ -95,6 +95,36 @@ narration, `\spoke` for dialogue, `\splitheading`, `\runningtitle`,
 `athar` blocks or the boxes, which supply the colour, face and spacing.
 Prose is ordinary paragraphs: a blank line is all a new paragraph needs.
 
+**House style.** Ask two questions before typesetting:
+
+- **References in footnotes or inline?** Default: footnotes. The source
+  and grading of a ḥadīth, athar or scholar's quote go in a footnote. An
+  āyah keeps its `\surah{Name}{n:n}` line inline.
+- **Narrator inside the ḥadīth or as a title line?** Default: inside it —
+  «عَنْ أَبِي هُرَيْرَةَ ﵁ قَالَ: قَالَ رَسُولُ اللَّهِ ﷺ: …» and "Narrated
+  Abū Hurayrah: Allah's Messenger ﷺ said, “…”" in the block itself.
+
+Then apply these without asking:
+
+- **Only the Prophet's ﷺ words are green.** Narrators and Companions
+  speaking inside a ḥadīth stay black; `\inhadith{}` wraps the Prophet's
+  words alone.
+- **Macrons in every translation.** Bring published English into the
+  booklet's transliteration: Qur’ân → Qurʾān, Ibrâhîm → Ibrāhīm,
+  Tâghût → Ṭāghūt; Allâh → Allah. Spelling only — no word changes.
+- **Grey glosses.** Every ( ) and [ ] gloss in a translation is
+  `\ingloss{}`.
+- **Verses → Āyāt, verse → Āyah** in translations.
+- **Short Arabic is centred.** Arabic that fits on one line sits in the
+  middle of the page, not hanging off to one side.
+- **Numbered āyah separators.** Between āyāt, write the āyah's number in
+  Arabic-Indic digits (`… ٱلْهَوَىٰٓ ٣ إِنْ هُوَ …`); the Uthmani face
+  draws bare digits as the numbered rosette. Never a blank `۝`.
+- **Quote blocks.** Ḥadīth and athar in `hadithbox` / `atharbox`, āyāt in
+  `ayahbox`.
+- **Model new work on the user's finished booklets**, not on the starters
+  alone.
+
 **4. Build.** One command, from the kit's main folder:
 
 ```bash
@@ -103,7 +133,7 @@ bash tools/build.sh "your document"     # bare name: found under booklets/
 
 It prints `PASS`/`FAIL` per document: **0 errors, 0 missing characters,
 0 collapsed vowel marks**. A missing character usually means Arabic in a
-face that lacks it (e.g. ﴿ ﴾ in the Uthmani face — use `۝` between āyāt).
+face that lacks it (e.g. ﴿ ﴾ in the Uthmani face).
 
 **5. Look at every page.** The build passing proves nothing about how it
 reads. Render the pages (`pdftoppm -png -r 68 file.pdf out` — bundled
